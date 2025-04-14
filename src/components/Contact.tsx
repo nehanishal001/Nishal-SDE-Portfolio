@@ -7,37 +7,7 @@ import { Mail, MapPin, Send } from "lucide-react";
 
 const Contact = () => {
   const { toast } = useToast();
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  });
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    setTimeout(() => {
-      toast({
-        title: "Message sent!",
-        description: "Thanks for reaching out. I'll get back to you shortly.",
-      });
-      setFormData({
-        name: "",
-        email: "",
-        subject: "",
-        message: "",
-      });
-      setIsSubmitting(false);
-    }, 1500);
-  };
 
   return (
     <section id="contact" className="py-20 bg-gray-50">
@@ -46,7 +16,7 @@ const Contact = () => {
           <h2 className="text-3xl md:text-4xl font-bold text-portfolio-blue">Let’s Connect</h2>
           <div className="mt-3 h-1 w-24 bg-portfolio-accent mx-auto"></div>
           <p className="mt-6 text-lg text-portfolio-gray max-w-2xl mx-auto">
-            I'm currently seeking full-time opportunities as a software engineer.  
+            I'm currently seeking full-time opportunities as a software engineer.
             If you'd like to talk about a role or my experience, feel free to reach out!
           </p>
         </div>
@@ -73,76 +43,62 @@ const Contact = () => {
               </div>
             </div>
 
-            <div className="mt-8">
-              <p className="text-portfolio-gray text-sm">
-                You can also{" "}
-                <a href="/Resume.pdf" target="_blank" rel="noopener noreferrer" className="text-portfolio-accent underline">
-                  view my resume
-                </a>{" "}
-                or connect with me on{" "}
-                <a href="https://www.linkedin.com/in/neha-nishal-goud-s/" target="_blank" rel="noopener noreferrer" className="text-portfolio-accent underline">
-                  LinkedIn
-                </a>.
-              </p>
+            <div className="mt-8 text-sm text-portfolio-gray">
+              You can also{" "}
+              <a href="/Resume.pdf" target="_blank" rel="noopener noreferrer" className="text-portfolio-accent underline">
+                view my resume
+              </a>{" "}
+              or connect with me on{" "}
+              <a href="https://www.linkedin.com/in/neha-nishal-goud-s/" target="_blank" rel="noopener noreferrer" className="text-portfolio-accent underline">
+                LinkedIn
+              </a>.
             </div>
           </div>
 
           <div className="lg:col-span-2">
-            <form onSubmit={handleSubmit} className="space-y-6 bg-white p-8 rounded-lg shadow-sm">
+            <form
+              name="contact"
+              method="POST"
+              data-netlify="true"
+              data-netlify-honeypot="bot-field"
+              className="space-y-6 bg-white p-8 rounded-lg shadow-sm"
+              onSubmit={() => {
+                setIsSubmitting(true);
+                toast({
+                  title: "Message sent!",
+                  description: "Thanks for reaching out. I'll get back to you shortly.",
+                });
+              }}
+            >
+              {/* Netlify required hidden fields */}
+              <input type="hidden" name="form-name" value="contact" />
+              <p hidden>
+                <label>
+                  Don’t fill this out if you're human: <input name="bot-field" />
+                </label>
+              </p>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-portfolio-gray mb-1">
-                    Name
-                  </label>
-                  <Input
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="Your name"
-                    required
-                  />
+                  <label htmlFor="name" className="block text-sm font-medium text-portfolio-gray mb-1">Name</label>
+                  <Input id="name" name="name" placeholder="Your name" required />
                 </div>
-
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-portfolio-gray mb-1">
-                    Email
-                  </label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="Your email"
-                    required
-                  />
+                  <label htmlFor="email" className="block text-sm font-medium text-portfolio-gray mb-1">Email</label>
+                  <Input id="email" name="email" type="email" placeholder="Your email" required />
                 </div>
               </div>
 
               <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-portfolio-gray mb-1">
-                  Subject
-                </label>
-                <Input
-                  id="subject"
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleChange}
-                  placeholder="Let me know how I can help"
-                  required
-                />
+                <label htmlFor="subject" className="block text-sm font-medium text-portfolio-gray mb-1">Subject</label>
+                <Input id="subject" name="subject" placeholder="Let me know how I can help" required />
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-portfolio-gray mb-1">
-                  Message
-                </label>
+                <label htmlFor="message" className="block text-sm font-medium text-portfolio-gray mb-1">Message</label>
                 <Textarea
                   id="message"
                   name="message"
-                  value={formData.message}
-                  onChange={handleChange}
                   placeholder="Share a role, question, or just say hi!"
                   required
                   className="w-full min-h-32"
